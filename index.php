@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>customs video player </title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css' integrity='sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2' crossorigin='anonymous'>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-3">
+                            <button class="btn btn-danger btn-sm upload_btn"> <i class="fa fa-upload"></i>
+                                Device</button>
+                        </div>
+                        <div class="col-9 text-right">
+                            <form>
+                                <div class="input-group">
+                                    <input name="video_link" required type="text" class="form-control" placeholder="Youtube video link">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="input-group-text go_btn">Go</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <video class="card-img-top" id="video">
+                        <source src="1.mp4" id="vid_src">
+                        </source>
+                    </video>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="row">
+                        <div class="col-12">
+                            <marquee class="title"></marquee>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-left">
+                            <small id="current">0:00</small>
+                        </div>
+                        <div class="col-6 text-right">
+                            <small id="duration">0:00</small>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="progress w-100 mx-4 m-1" id="progress">
+                            <div class="progress-bar bg-primary" id="progress_bar"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <i class="fa fa-backward" id="backward"></i>
+                        </div>
+                        <div class="col">
+                            <i class="fa fa-play" id="play_icon"></i>
+                        </div>
+                        <div class="col">
+                            <i class="fa fa-forward" id="forword"></i>
+                        </div>
+
+                    </div>
+                    <center>
+                        <button class="btn btn-primary m-3 download_btn">
+                            Download Video
+                        </button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js' integrity='sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN' crossorigin='anonymous'></script>
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js' integrity='sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s' crossorigin='anonymous'></script>
+    <script>
+        $(document).ready(function() {
+            function video_controls() {
+                var video = document.getElementById("video");
+                // video.style.opacity = "0";
+                var play_icon = document.querySelector("#play_icon");
+                play_icon.onclick = function() {
+                    if (this.className == "fa fa-play") {
+                        video.play();
+                    } else if (this.className == "fa fa-pause") {
+                        video.pause();
+                    }
+                }
+                video.onplaying = function() {
+                    play_icon.className = "fa fa-pause";
+                }
+                video.onpause = function() {
+                    play_icon.className = "fa fa-play";
+                }
+                video.ontimeupdate = function() {
+                    var duration = video.duration;
+                    var current = video.currentTime;
+                    document.querySelector("#current").innerHTML = (current / 60).toFixed(2);
+                    document.querySelector("#duration").innerHTML = (duration / 60).toFixed(2);
+                    document.querySelector("#progress_bar").style.width = current * 100 / duration + "%";
+                    document.querySelector("#progress").onclick = function(event) {
+                        var total = this.offsetWidth;
+                        var current_position = event.offsetX;
+                        var forward = current_position / total;
+
+                        video.currentTime = forward * video.duration;
+                    }
+                    document.querySelector("#backward").onclick = function() {
+                        video.currentTime = video.currentTime - 10;
+                    }
+                    document.querySelector("#forword").onclick = function() {
+                        video.currentTime = video.currentTime + 10;
+                    }
+                }
+            };
+            video_controls();
+
+            function upload_video_from_device() {
+                $(".upload_btn").click(function() {
+                    var video = document.getElementById("video");
+                    var video_src = document.getElementById("vid_src");
+                    var input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "video/*";
+                    input.click();
+                    input.onchange = function(e) {
+                        var file = this.files[0];
+                        var name = file.name;
+                        $(".title").html(name);
+                        var blob = URL.createObjectURL(file);
+                        video_src.src = blob;
+                        video.load();
+                        video.play();
+                    };
+                });
+            };
+            upload_video_from_device();
+
+            function yt_video_fetch() {
+                $("form").submit(function(event) {
+                    event.preventDefault();
+                    var video = document.getElementById("video");
+                    var video_src = document.getElementById("vid_src");
+                    $.ajax({
+                        type: "POST",
+                        url: "https://yt-vid-fetch.herokuapp.com/",
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        beforeSend: function() {
+                            $(".go_btn").html("please wait..");
+                            $(".go_btn").prop("disabled", true);
+                        },
+                        success: function(result) {
+                            $(".go_btn").html("Go");
+                            $(".go_btn").prop("disabled", true);
+                            var data = JSON.parse(result);
+                            let title = data.title;
+                            let video_data = data.video;
+                            let thumbnail = data.thumbnail;
+                            video_src.src = video_data;
+                            $(".title").html(title);
+                            video.load();
+                            video.play();
+                        }
+                    })
+                });
+            };
+            yt_video_fetch();
+
+            function download() {
+                $(".download_btn").click(function() {
+                    var video_src = document.getElementById("vid_src");
+                    var src_link = video_src.getAttribute("src");
+                    var a_tag = document.createElement("a");
+                    var vid_title = $(".title").html();
+                    a_tag.href = src_link;
+                    a_tag.download = vid_title;
+                    a_tag.click();
+                });
+            };
+            download();
+        });
+    </script>
+    <script src="controls.js"></script>
+</body>
+
+</html>

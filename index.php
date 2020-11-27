@@ -155,7 +155,7 @@
                     var video_src = document.getElementById("vid_src");
                     $.ajax({
                         type: "POST",
-                        url: "https://yt-vid-fetch.herokuapp.com/",
+                        url: "info/index.php",
                         data: new FormData(this),
                         processData: false,
                         contentType: false,

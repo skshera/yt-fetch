@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body p-0">
                     <video class="card-img-top" id="video">
-                        <source src="" id="vid_src">
+                        <source src="one.mp4" id="vid_src">
                         </source>
                     </video>
                 </div>

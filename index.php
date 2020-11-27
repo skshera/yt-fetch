@@ -165,6 +165,7 @@
                             $(".go_btn").prop("disabled", true);
                         },
                         success: function(result) {
+                            console.log(result);
                             $(".go_btn").html("Go");
                             $(".go_btn").prop("disabled", true);
                             var data = JSON.parse(result);

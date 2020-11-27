@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body p-0">
                     <video class="card-img-top" id="video">
-                        <source src="1.mp4" id="vid_src">
+                        <source src="" id="vid_src">
                         </source>
                     </video>
                 </div>
@@ -195,7 +195,7 @@
             download();
         });
     </script>
-    <script src="controls.js"></script>
+<!--     <script src="controls.js"></script> -->
 </body>
 
 </html>

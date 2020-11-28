@@ -36,8 +36,8 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <video class="card-img-top" id="video">
-                        <source src="one.mp4" id="vid_src">
+                    <video class="card-img-top" id="video" poster="https://www.bitsolution.site/files/poster.png">
+                        <source src="https://www.bitsolution.site/files/video.mp4" id="vid_src">
                         </source>
                     </video>
                 </div>
